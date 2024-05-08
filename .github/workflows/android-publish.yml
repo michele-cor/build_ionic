@@ -34,7 +34,9 @@ jobs:
             java-version: '21'
             distribution: 'oracle'
       - name: Publish app
-        run: ./gradlew assembleRelease
+        run: |
+          cd android
+          ./gradlew assembleRelease
 
 
   #android_publish:
