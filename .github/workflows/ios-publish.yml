@@ -1,0 +1,12 @@
+name: ios-publish
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ionic-build.yml
+  #ios_publish:
+      #needs: ionic_build
