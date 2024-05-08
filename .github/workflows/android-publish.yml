@@ -20,14 +20,12 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-      - name: Install Cordova
-        run: npm install -g cordova
-  
+      - name: Install app dependencies
+        run: npm install
       - name: Install Ionic
         run: npm install -g @ionic/cli
 
-      - name: Install app dependencies
-        run: npm install
+
   #android_publish:
       #needs: ionic_build
 
