@@ -37,7 +37,11 @@ jobs:
         run: |
           cd android
           ./gradlew assembleRelease
-
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-signed-release
+          path: ./android/app/build/outputs/apk/release/app-release.apk
 
   #android_publish:
       #needs: ionic_build
