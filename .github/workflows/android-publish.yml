@@ -9,7 +9,7 @@ jobs:
     - name: Repo Checkout
       uses: actions/checkout@v4
     - name: Ionic build
-      uses: michele-cor/build_ionic/.github/workflows/ionic-build.yml
+      uses: michele-cor/build_ionic/.github/workflows/Ionic-Build
   #android_publish:
       #needs: ionic_build
 
