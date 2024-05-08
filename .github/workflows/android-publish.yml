@@ -28,6 +28,12 @@ jobs:
         run: npm run build
       - name: Cap sync
         run: npx cap sync
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+            java-version: '21'
+      - name: Publish app
+        run: ./gradlew assembleRelease
 
 
   #android_publish:
