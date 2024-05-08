@@ -4,19 +4,28 @@ on: workflow_dispatch
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
     steps:
-    - name: Repo Checkout
-      uses: actions/checkout@v4
-    - name: Install Ionic Cli
-      run: |
-        npm i -g ionic/cli
-    - name: Install Ionic Cli
-      run: |
-        npm i -g ionic/cli
-        npm i --legacy-peer-deps
-        npm run build
-        npx cap sync
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      #- name: Setup java
+      #  uses: actions/setup-java@v1
+      #  with:
+      #    java-version: 1.8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+
+      - name: Install app dependencies
+        run: npm install
   #android_publish:
       #needs: ionic_build
 
