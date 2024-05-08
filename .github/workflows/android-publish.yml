@@ -24,6 +24,10 @@ jobs:
         run: npm install
       - name: Install Ionic
         run: npm install -g @ionic/cli
+      - name: Build
+        run: npm run build
+      - name: Cap sync
+        run: npx cap sync
 
 
   #android_publish:
