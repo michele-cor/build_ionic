@@ -2,6 +2,10 @@ name: android-publish
 
 on: workflow_dispatch
 
+#TODO: aggiungere keystore nei secrets e crearlo nella cartella android con la action
+#TODO: aggiungere i settings del file gradle.build nei secrets e aggiungere i valori nel file gradle.build nella action
+#TODO: push su intune
+
 jobs:
   build:
     name: Build APK
@@ -9,17 +13,10 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-
-      #- name: Setup java
-      #  uses: actions/setup-java@v1
-      #  with:
-      #    java-version: 1.8
-
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
       - name: Install app dependencies
         run: npm install
       - name: Install Ionic
@@ -43,7 +40,4 @@ jobs:
           name: apk-signed-release
           path: ./android/app/build/outputs/apk/release/app-release.apk
 
-  #android_publish:
-      #needs: ionic_build
 
-      
