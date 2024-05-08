@@ -32,6 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
             java-version: '21'
+            distribution: 'oracle'
       - name: Publish app
         run: ./gradlew assembleRelease
 
