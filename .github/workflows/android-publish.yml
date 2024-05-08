@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: /michele-cor/build_ionic/.github/workflows/ionic-build.yml
+    - uses: michele-cor/build_ionic/.github/workflows/ionic-build.yml
   #android_publish:
       #needs: ionic_build
 
