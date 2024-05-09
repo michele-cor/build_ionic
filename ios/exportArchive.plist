@@ -6,7 +6,7 @@
 <string>enterprise</string>
 <key>provisioningProfiles</key>
 <dict>
-    <key>place.appreciation.jar</key>
+    <key>com.mediaset.onevision.test</key>
     <string>One_Vision_Test_Profile</string>
 </dict>
 </dict>
