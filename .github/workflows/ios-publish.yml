@@ -56,7 +56,8 @@ jobs:
       run: npx cap sync
     - name: Build project
       run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
-
+    - name: Debug LS
+      run: ls -Ral
     - name: 🍻 Assemble IPA
       run: xcodebuild archive -archivePath App.xcarchive -exportArchive -exportOptionsPlist ./archive.plist -exportPath output -allowProvisioningUpdates
 
