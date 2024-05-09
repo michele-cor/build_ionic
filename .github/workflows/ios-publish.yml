@@ -53,7 +53,8 @@ jobs:
       run: npm run build
     - name: Cap sync
       run: npx cap sync
-
+    - name: Update Cocoapods
+      run: brew upgrade cocoapods
     - name: Build project
       run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
 
