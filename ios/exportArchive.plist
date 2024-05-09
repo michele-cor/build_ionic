@@ -7,7 +7,7 @@
 <key>provisioningProfiles</key>
 <dict>
     <key>com.mediaset.onevision.test</key>
-    <string>One_Vision_Test_Profile</string>
+    <string>One Vision Test Profile</string>
 </dict>
 </dict>
 </plist>
