@@ -7,7 +7,7 @@
 <key>provisioningProfiles</key>
 <dict>
     <key>place.appreciation.jar</key>
-    <string>One Vision Test Profile</string>
+    <string>One_Vision_Test_Profile</string>
 </dict>
 </dict>
 </plist>
