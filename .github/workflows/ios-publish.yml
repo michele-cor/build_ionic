@@ -56,18 +56,14 @@ jobs:
       run: npx cap sync
     - name: Build project
       run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
-    - name: Debug LS
-      run: ls -Ral
     - name: 🍻 Assemble IPA
       run: xcodebuild archive -archivePath App.xcarchive -exportArchive -exportOptionsPlist ./ios/exportArchive.plist -exportPath output -allowProvisioningUpdates
-
     - name: Upload release bundle
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: app-ios
         path: output/
         retention-days: 60
-
     - name: Clean up keychain and provisioning profile
       if: ${{ always() }}
       run: |
