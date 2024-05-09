@@ -8,7 +8,8 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
-
+    - name: Update Cocoapods
+      run: bundle update cocopods
     - name: Install the Apple certificate and provisioning profile
       env:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -53,8 +54,6 @@ jobs:
       run: npm run build
     - name: Cap sync
       run: npx cap sync
-    - name: Update Cocoapods
-      run: brew upgrade cocoapods
     - name: Build project
       run: xcodebuild -workspace './ios/App/App.xcworkspace' -scheme App -destination generic/platform=iOS -archivePath App.xcarchive archive
 
