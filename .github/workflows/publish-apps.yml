@@ -39,16 +39,17 @@ jobs:
         run: |
           echo "Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
 
-      # - name: Set up Git user
-      #   run: |
-      #     git config --local user.email "action@github.com"
-      #     git config --local user.name "GitHub Action"
+      - name: Set up Git user
+        run: |
+          git config --local user.email "m.mezzanotte@ptsclas.com"
+          git config --local user.name "Marco Mezzanotte through action"
 
-      # - name: Create and Push Tag
-      #   run: |
-      #     git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
-      #     git tag build-${{ env.BUILD_INT_VERSION_CODE }}
-      #     git push origin --tags
+      - name: Create and Push Tag
+        continue-on-error: true
+        run: |
+          git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
+          git tag build-${{ env.BUILD_INT_VERSION_CODE }}
+          git push origin --tags
 
       - name: Update package.json version
         run: |
@@ -62,11 +63,18 @@ jobs:
         run: |
           npx capacitor-set-version set:ios -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
 
+      - name: Remove node_modules
+        run: |
+          find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+
+      - name: Archive code
+        run: tar -czf source-code.tar.gz .
+
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
           name: prepared-code
-          path: . # all files
+          path: source-code.tar.gz
 
   android:
     needs: prepare
@@ -76,6 +84,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: prepared-code
+      
+      - name: Extract code
+        run: tar -xzf source-code.tar.gz
 
       - name: Echo Version Number
         run: |
