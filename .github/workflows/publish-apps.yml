@@ -39,6 +39,9 @@ jobs:
         run: |
           echo "Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
 
+      - name: Update Workflow Run Name
+        run: echo "::set-env name=run-name::Build and push ${{ steps.gitversion.outputs.majorMinorPatch }}"
+
       - name: Set up Git user
         run: |
           git config --local user.email "m.mezzanotte@ptsclas.com"
@@ -68,7 +71,10 @@ jobs:
           find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
       - name: Archive code
-        run: tar -czf source-code.tar.gz . --warning=no-file-changed
+        run: |
+          mkdir build-stage
+          rsync -a --exclude=build-stage . build-stage/
+          tar -czf source-code.tar.gz build-stage/
 
       - name: Create artifact
         uses: actions/upload-artifact@v2
