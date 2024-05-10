@@ -1,4 +1,4 @@
-name: Build and Deploy Ionic App
+name: sample-gitversion
 
 on: workflow_dispatch
 
