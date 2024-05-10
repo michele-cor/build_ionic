@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # this makes the checkout action fetch the complete history
 
@@ -93,13 +93,35 @@ jobs:
           name: prepared-code
       
       - name: Extract code
-        run: tar -xzf source-code.tar.gz
-
-      - name: Echo Version Number
+        run: tar -xzf .\source-code.tar.gz --strip-components=1 -C . build-stage/
+        
+        # actual build from here on
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install app dependencies
+        run: npm install
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+      - name: Build
+        run: npm run build
+      - name: Cap sync
+        run: npx cap sync
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+            java-version: '21'
+            distribution: 'oracle'
+      - name: Publish app
         run: |
-          echo "Building android. Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
-          ls -la
-
+          cd android
+          ./gradlew assembleRelease
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-signed-release
+          path: ./android/app/build/outputs/apk/release/app-release.apk
 
   ios:
     needs: prepare
@@ -110,7 +132,5 @@ jobs:
         with:
           name: prepared-code
 
-      - name: Echo Version Number
-        run: |
-          echo "Building ios. Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
-          ls -la
+      - name: Extract code
+        run: tar -xzf .\source-code.tar.gz --strip-components=1 -C . build-stage/
