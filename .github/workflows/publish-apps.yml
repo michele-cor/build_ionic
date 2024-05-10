@@ -56,11 +56,11 @@ jobs:
 
       - name: Set Android app version code
         run: |
-          capacitor-set-version set:android -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
+          npx capacitor-set-version set:android -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
 
       - name: Set iOS app version number
         run: |
-          capacitor-set-version set:ios -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
+          npx capacitor-set-version set:ios -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
 
       - name: Create artifact
         uses: actions/upload-artifact@v2
