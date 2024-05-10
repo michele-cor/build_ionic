@@ -4,12 +4,10 @@ assembly-informational-format: '{InformationalVersion}'
 mode: ContinuousDelivery
 branches:
   develop:
+    tag: beta
     increment: Patch
   feature:
     tag: alpha
-    increment: Minor
-  release:
-    tag: beta
     increment: Minor
   hotfix:
     tag: patch
@@ -17,4 +15,3 @@ branches:
 ignore:
   sha: []
 merge-message-formats: {}
-update-build-number: true
