@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # this makes the checkout action fetch the complete history
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.11
