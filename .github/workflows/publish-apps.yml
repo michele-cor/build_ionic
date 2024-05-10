@@ -39,16 +39,16 @@ jobs:
         run: |
           echo "Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
 
-      - name: Set up Git user
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+      # - name: Set up Git user
+      #   run: |
+      #     git config --local user.email "action@github.com"
+      #     git config --local user.name "GitHub Action"
 
-      - name: Create and Push Tag
-        run: |
-          git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
-          git tag build-${{ env.BUILD_INT_VERSION_CODE }}
-          git push origin --tags
+      # - name: Create and Push Tag
+      #   run: |
+      #     git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
+      #     git tag build-${{ env.BUILD_INT_VERSION_CODE }}
+      #     git push origin --tags
 
       - name: Update package.json version
         run: |
