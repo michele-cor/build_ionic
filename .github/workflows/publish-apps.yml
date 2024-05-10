@@ -1,0 +1,96 @@
+name: Build and Deploy Ionic App
+
+on: workflow_dispatch
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.11
+        with:
+          versionSpec: '5.x'
+ 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      
+      - name: Install capacitor-set-version
+        run: npm install -D capacitor-set-version  
+
+      - name: Use GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.11
+        with:
+          useConfigFile: true
+          configFilePath: 'build/GitVersion.yml'
+
+      #  compute unique integer build code for android as "NOW(unix ts seconds) - 2024-05-01:00:00:00 UTC"
+      - name: Compute Android Integer Build Code
+        run: echo "BUILD_INT_VERSION_CODE=$(( $(date +%s) - 1714514400 ))" >> $GITHUB_ENV
+
+      - name: Echo Version Number
+        run: |
+          echo "Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
+
+      - name: Set up Git user
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Create and Push Tag
+        run: |
+          git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
+          git tag build-${{ env.BUILD_INT_VERSION_CODE }}
+          git push origin --tags
+
+      - name: Update package.json version
+        run: |
+          npm version $version --no-git-tag-version
+
+      - name: Set Android app version code
+        run: |
+          capacitor-set-version set:android -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
+
+      - name: Set iOS app version number
+        run: |
+          capacitor-set-version set:ios -v ${{ steps.gitversion.outputs.majorMinorPatch }} -b ${{ env.BUILD_INT_VERSION_CODE }}
+
+      - name: Create artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: prepared-code
+          path: . # all files
+
+  android:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: prepared-code
+
+      - name: Echo Version Number
+        run: |
+          echo "Building android. Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
+          ls -la
+
+
+  ios:
+    needs: prepare
+    runs-on: macos-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: prepared-code
+
+      - name: Echo Version Number
+        run: |
+          echo "Building ios. Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
+          ls -la
