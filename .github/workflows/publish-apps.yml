@@ -40,6 +40,7 @@ jobs:
           echo "Version number is: ${{ steps.gitversion.outputs.majorMinorPatch }} and Android integer version code ${{ env.BUILD_INT_VERSION_CODE }}"
 
       - name: Update Workflow Run Name
+        continue-on-error: true
         run: echo "::set-env name=run-name::Build and push ${{ steps.gitversion.outputs.majorMinorPatch }}"
 
       - name: Set up Git user
