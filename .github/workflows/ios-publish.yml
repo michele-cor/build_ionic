@@ -8,8 +8,6 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
-    - name: Update CocoaPods
-      run: gem update cocoapods
     - name: Install the Apple certificate and provisioning profile
       env:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
