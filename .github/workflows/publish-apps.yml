@@ -100,14 +100,17 @@ jobs:
   
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERTIFICATE_PATH
-
+      - name: Debug
+        run: |
+          ls -al
+          pwd
       - name: Setup Keystore settings in gradle.properties
         env:
           RELEASE_STORE_FILE_PROPERTY_NAME: RELEASE_STORE_FILE
           RELEASE_STORE_PASSWORD_PROPERTY_NAME: RELEASE_STORE_PASSWORD
           RELEASE_KEY_ALIAS_PROPERTY_NAME: RELEASE_KEY_ALIAS
           RELEASE_KEY_PASSWORD_PROPERTY_NAME: RELEASE_KEY_PASSWORD
-          GRADLE_FILE_PATH: android\gradle.properties
+          GRADLE_FILE_PATH: .\android\gradle.properties
         run: |
           # --------------------------
           # Upsert Property RELEASE_STORE_FILE
@@ -145,7 +148,7 @@ jobs:
               # Property not found, so add it
               echo "$RELEASE_KEY_PASSWORD_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}" >> "$GRADLE_FILE_PATH"
           fi
-          
+          cat $GRADLE_FILE_PATH
         # actual build from here on
       - name: Setup Node.js
         uses: actions/setup-node@v4
