@@ -2,6 +2,16 @@ name: publish-apps
 
 on: workflow_dispatch
 
+#Secrets
+#${{ secrets.ANDROID_BUILD_CERTIFICATE_BASE64 }}
+#${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}
+#${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
+#${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+#${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+#${{ secrets.P12_PASSWORD }}
+#${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+#${{ secrets.KEYCHAIN_PASSWORD }}
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
