@@ -48,7 +48,6 @@ jobs:
         continue-on-error: true
         run: |
           git tag v${{ steps.gitversion.outputs.majorMinorPatch }}
-          git tag build-${{ env.BUILD_INT_VERSION_CODE }}
           git push origin --tags
 
       - name: Update package.json version
