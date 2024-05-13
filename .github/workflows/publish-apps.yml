@@ -99,7 +99,7 @@ jobs:
           CERTIFICATE_PATH=$RUNNER_TEMP/$BUILD_KEYSTORE_NAME
   
           # import certificate and provisioning profile from secrets
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERTIFICATE_PATH
 
       - name: Setup Keystore settings in gradle.properties
         env:
