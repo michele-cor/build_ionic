@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: prepared-code
       
@@ -110,7 +110,8 @@ jobs:
           RELEASE_STORE_PASSWORD_PROPERTY_NAME: RELEASE_STORE_PASSWORD
           RELEASE_KEY_ALIAS_PROPERTY_NAME: RELEASE_KEY_ALIAS
           RELEASE_KEY_PASSWORD_PROPERTY_NAME: RELEASE_KEY_PASSWORD
-          GRADLE_FILE_PATH: .\android\gradle.properties
+          GRADLE_FILE_PATH: android/gradle.properties
+          BUILD_KEYSTORE_NAME: android-app-build.keystore
         run: |
           # --------------------------
           # Upsert Property RELEASE_STORE_FILE
@@ -182,7 +183,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: prepared-code
 
