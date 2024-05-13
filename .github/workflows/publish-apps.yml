@@ -113,10 +113,10 @@ jobs:
           # Upsert Property RELEASE_STORE_FILE
           if grep -q "^$RELEASE_STORE_FILE_PROPERTY_NAME=" "$GRADLE_FILE_PATH"; then
               # Property found, so replace it
-              sed -i "s/^$RELEASE_STORE_FILE_PROPERTY_NAME=.*/$RELEASE_STORE_FILE_PROPERTY_NAME=$BUILD_KEYSTORE_NAME/" "$GRADLE_FILE_PATH"
+              sed -i "s/^$RELEASE_STORE_FILE_PROPERTY_NAME=.*/$RELEASE_STORE_FILE_PROPERTY_NAME=$RUNNER_TEMP/$BUILD_KEYSTORE_NAME/" "$GRADLE_FILE_PATH"
           else
               # Property not found, so add it
-              echo "$RELEASE_STORE_FILE_PROPERTY_NAME=$BUILD_KEYSTORE_NAME" >> "$GRADLE_FILE_PATH"
+              echo "$RELEASE_STORE_FILE_PROPERTY_NAME=$RUNNER_TEMP/$BUILD_KEYSTORE_NAME" >> "$GRADLE_FILE_PATH"
           fi
           # --------------------------
           # Upsert Property RELEASE_STORE_PASSWORD
