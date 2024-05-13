@@ -41,8 +41,8 @@ jobs:
 
       - name: Set up Git user
         run: |
-          git config --local user.email "m.mezzanotte@ptsclas.com"
-          git config --local user.name "Marco Mezzanotte through action"
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Action [bot]"
 
       - name: Create and Push Tag
         continue-on-error: true
@@ -90,6 +90,62 @@ jobs:
       - name: Extract code
         run: tar -xzf source-code.tar.gz --strip-components=1 -C . build-stage/
         
+      - name: Decode keystore file from base64
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.ANDROID_BUILD_CERTIFICATE_BASE64 }}
+          BUILD_KEYSTORE_NAME: android-app-build.keystore
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/$BUILD_KEYSTORE_NAME
+  
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+      - name: Setup Keystore settings in gradle.properties
+        env:
+          RELEASE_STORE_FILE_PROPERTY_NAME: RELEASE_STORE_FILE
+          RELEASE_STORE_PASSWORD_PROPERTY_NAME: RELEASE_STORE_PASSWORD
+          RELEASE_KEY_ALIAS_PROPERTY_NAME: RELEASE_KEY_ALIAS
+          RELEASE_KEY_PASSWORD_PROPERTY_NAME: RELEASE_KEY_PASSWORD
+          GRADLE_FILE_PATH: android\gradle.properties
+        run: |
+          # --------------------------
+          # Upsert Property RELEASE_STORE_FILE
+          if grep -q "^$RELEASE_STORE_FILE_PROPERTY_NAME=" "$GRADLE_FILE_PATH"; then
+              # Property found, so replace it
+              sed -i "s/^$RELEASE_STORE_FILE_PROPERTY_NAME=.*/$RELEASE_STORE_FILE_PROPERTY_NAME=$BUILD_KEYSTORE_NAME/" "$GRADLE_FILE_PATH"
+          else
+              # Property not found, so add it
+              echo "$RELEASE_STORE_FILE_PROPERTY_NAME=$BUILD_KEYSTORE_NAME" >> "$GRADLE_FILE_PATH"
+          fi
+          # --------------------------
+          # Upsert Property RELEASE_STORE_PASSWORD
+          if grep -q "^$RELEASE_STORE_PASSWORD_PROPERTY_NAME=" "$GRADLE_FILE_PATH"; then
+              # Property found, so replace it
+              sed -i "s/^$RELEASE_STORE_PASSWORD_PROPERTY_NAME=.*/$RELEASE_STORE_PASSWORD_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}/" "$GRADLE_FILE_PATH"
+          else
+              # Property not found, so add it
+              echo "$RELEASE_STORE_PASSWORD_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_STORE_PASSWORD }}" >> "$GRADLE_FILE_PATH"
+          fi
+          # --------------------------
+          # Upsert Property RELEASE_KEY_ALIAS
+          if grep -q "^$RELEASE_KEY_ALIAS_PROPERTY_NAME=" "$GRADLE_FILE_PATH"; then
+              # Property found, so replace it
+              sed -i "s/^$RELEASE_KEY_ALIAS_PROPERTY_NAME=.*/$RELEASE_KEY_ALIAS_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}/" "$GRADLE_FILE_PATH"
+          else
+              # Property not found, so add it
+              echo "$RELEASE_KEY_ALIAS_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}" >> "$GRADLE_FILE_PATH"
+          fi
+          # --------------------------
+          # Upsert Property RELEASE_KEY_PASSWORD
+          if grep -q "^$RELEASE_KEY_PASSWORD_PROPERTY_NAME=" "$GRADLE_FILE_PATH"; then
+              # Property found, so replace it
+              sed -i "s/^$RELEASE_KEY_PASSWORD_PROPERTY_NAME=.*/$RELEASE_KEY_PASSWORD_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}/" "$GRADLE_FILE_PATH"
+          else
+              # Property not found, so add it
+              echo "$RELEASE_KEY_PASSWORD_PROPERTY_NAME=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}" >> "$GRADLE_FILE_PATH"
+          fi
+          
         # actual build from here on
       - name: Setup Node.js
         uses: actions/setup-node@v4
